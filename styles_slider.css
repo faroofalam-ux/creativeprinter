@@ -1,0 +1,211 @@
+/* ============================================
+   PHASE 2: HEADER ANIMATION & POSTER SLIDER
+   ============================================ */
+
+/* Kinetic/Madness Header Animation */
+.brand-kinetic {
+    background: linear-gradient(90deg,
+            #8b5cf6,
+            #ec4899,
+            #f59e0b,
+            #10b981,
+            #3b82f6,
+            #8b5cf6);
+    background-size: 400% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: kineticGradient 4s ease-in-out infinite,
+        kineticShake 0.5s ease-in-out infinite;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+@keyframes kineticGradient {
+
+    0%,
+    100% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+@keyframes kineticShake {
+
+    0%,
+    100% {
+        transform: translateX(0) rotate(0deg);
+    }
+
+    25% {
+        transform: translateX(1px) rotate(0.5deg);
+    }
+
+    50% {
+        transform: translateX(-1px) rotate(-0.5deg);
+    }
+
+    75% {
+        transform: translateX(0.5px) rotate(0.3deg);
+    }
+}
+
+/* Hero Poster Slider */
+.hero-slider {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    margin-bottom: 40px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(139, 92, 246, 0.3);
+}
+
+.slider-container {
+    display: flex;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    position: relative;
+}
+
+.slider-item {
+    min-width: 100%;
+    height: 100%;
+    position: relative;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.slider-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.slider-item:hover img {
+    transform: scale(1.05);
+}
+
+/* Neon RGB Glow Effect */
+.slider-item::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(45deg,
+            #ff0000,
+            #ff7f00,
+            #ffff00,
+            #00ff00,
+            #0000ff,
+            #4b0082,
+            #8b00ff);
+    background-size: 400%;
+    border-radius: 20px;
+    filter: blur(20px);
+    opacity: 0.7;
+    z-index: -1;
+    animation: neonRgbRotate 6s linear infinite;
+}
+
+@keyframes neonRgbRotate {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.slider-nav {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 10;
+}
+
+.slider-arrow {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--primary);
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.slider-arrow:hover {
+    background: white;
+    transform: scale(1.1);
+}
+
+.slider-dots {
+    display: flex;
+    gap: 8px;
+}
+
+.slider-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.slider-dot.active {
+    width: 30px;
+    border-radius: 5px;
+    background: white;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+/* Dark Mode Adjustments */
+[data-theme="dark"] .slider-arrow {
+    background: rgba(30, 41, 59, 0.9);
+    color: #a78bfa;
+}
+
+[data-theme="dark"] .slider-dot {
+    background: rgba(148, 163, 184, 0.5);
+}
+
+[data-theme="dark"] .slider-dot.active {
+    background: #a78bfa;
+    box-shadow: 0 0 10px rgba(167, 139, 250, 0.8);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .hero-slider {
+        height: 250px;
+        margin-bottom: 24px;
+    }
+
+    .slider-arrow {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+    }
+}

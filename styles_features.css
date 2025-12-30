@@ -1,0 +1,59 @@
+/* Orders List Styles */
+.orders-list {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 10px 0;
+}
+
+.order-item {
+    background: var(--bg-page);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.order-status {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-ORDER_PLACED {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.status-PROCESSING {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-COMPLETED {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.order-details p {
+    margin: 6px 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* Wishlist Grid */
+.wishlist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    padding: 16px 0;
+}

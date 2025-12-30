@@ -1,0 +1,90 @@
+/* Color Picker Wrapper */
+.color-picker-wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.color-picker-wrapper input[type="color"] {
+    width: 50px;
+    height: 40px;
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 2px;
+}
+
+.color-picker-wrapper input[type="text"] {
+    flex: 1;
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+}
+
+.form-row .form-group.half {
+    flex: 1;
+}
+
+/* Payment Gateway Enhanced Styling */
+.payment-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.payment-actions .btn-premium {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.payment-actions .btn-premium:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(139, 92, 246, 0.3);
+}
+
+.payment-actions .btn-premium:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 8px rgba(139, 92, 246, 0.2);
+}
+
+.btn-whatsapp {
+    background: #25D366 !important;
+}
+
+.btn-whatsapp:hover {
+    background: #1da851 !important;
+    box-shadow: 0 8px 16px rgba(37, 211, 102, 0.3) !important;
+}
+
+/* Loading animation */
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.payment-mock .card-loader {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Small buy button styling */
+.small-buy-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.small-buy-btn:hover {
+    transform: scale(1.02);
+}

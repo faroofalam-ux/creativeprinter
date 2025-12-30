@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creative Printers - Premium Printing Services.">
+    <meta name="theme-color" content="#8b5cf6">
+    <title>Creative Printers</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles_additions.css">
+    <link rel="stylesheet" href="styles_modal_fixes.css">
+    <link rel="stylesheet" href="styles_features.css">
+    <link rel="stylesheet" href="styles_payment.css">
+    <link rel="stylesheet" href="styles_slider.css">
+
+    <!-- Firebase Compat Support -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+</head>
+
+<body>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Backgrounds -->
+    <div class="fixed-theme-bg left"></div>
+    <div class="fixed-theme-bg right"></div>
+    <div class="gravity-bg" id="gravity-bg"></div>
+    <div class="jaipur-watermark"></div>
+    <div class="hero-bg-img"></div>
+
+    <div class="app-layout">
+        <!-- Sidebar (Filters) -->
+        <aside class="app-sidebar" id="app-sidebar">
+            <div class="sidebar-header">
+                <div class="logo-small">
+                    <i class="ph ph-printer"></i>
+                </div>
+                <h3 class="brand-kinetic">Creative Printers</h3>
+                <button class="close-sidebar-btn" onclick="toggleSidebar()"><i class="ph ph-x"></i></button>
+            </div>
+
+            <div class="sidebar-content">
+                <div class="filter-group">
+                    <h4 data-i18n="services_title">Categories</h4>
+                    <ul class="filter-list">
+                        <!-- Converted clickable categories to list items that scroll to section -->
+                        <li><a href="#cat-tshirts" class="active" onclick="scrollToCategory('tshirts')"><i
+                                    class="ph ph-t-shirt"></i> T-Shirts</a></li>
+                        <li><a href="#cat-corporate" onclick="scrollToCategory('corporate')"><i
+                                    class="ph ph-briefcase"></i> Corporate</a></li>
+                        <li><a href="#cat-personalized" onclick="scrollToCategory('personalized')"><i
+                                    class="ph ph-gift"></i> Personalized</a></li>
+                    </ul>
+                </div>
+
+                <div class="filter-group">
+                    <h4>Price Range</h4>
+                    <div class="price-range-container">
+                        <input type="range" id="price-min" min="0" max="5000" value="0" step="50"
+                            oninput="updatePriceFilter()" style="width: 100%;">
+                        <input type="range" id="price-max" min="0" max="5000" value="5000" step="50"
+                            oninput="updatePriceFilter()" style="width: 100%; margin-top: 8px;">
+                    </div>
+                    <div class="price-labels" style="display: flex; justify-content: space-between; margin-top: 8px;">
+                        <span id="price-min-label">₹0</span>
+                        <span id="price-max-label">₹5000</span>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <h4>Quick Links</h4>
+                    <ul class="filter-list">
+                        <li><a href="#" onclick="openModal('pdf-catalog-modal')">Catalogs</a></li>
+                        <li><a href="#" onclick="openModal('settings-modal')">Settings</a></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="app-main">
+            <!-- Modern Sticky Header -->
+            <header class="modern-header">
+                <div class="header-left">
+                    <button class="menu-btn" onclick="toggleSidebar()"><i class="ph ph-list"></i></button>
+                    <div class="search-bar">
+                        <i class="ph ph-magnifying-glass"></i>
+                        <input type="text" placeholder="Search services..." onkeyup="filterServices(this.value)">
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <button class="icon-btn" id="my-orders-btn" aria-label="My Orders" title="My Orders">
+                        <i class="ph ph-package"></i>
+                    </button>
+                    <button class="icon-btn" id="wishlist-btn" aria-label="Wishlist" title="Wishlist">
+                        <i class="ph ph-heart"></i>
+                    </button>
+                    <button class="icon-btn" id="settings-btn" aria-label="Settings">
+                        <i class="ph ph-gear"></i>
+                    </button>
+                    <button class="icon-btn" id="theme-toggle" aria-label="Toggle Theme">
+                        <i class="ph ph-moon"></i>
+                    </button>
+                    <button class="icon-btn" id="login-btn">
+                        <span data-i18n="login">Login</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Product Grid Content -->
+            <div class="content-scroll">
+                <!-- Hero Poster Slider -->
+                <div id="hero-slider" class="hero-slider">
+                    <div class="slider-container" id="slider-container">
+                        <!-- Posters will be loaded dynamically -->
+                    </div>
+                    <div class="slider-nav">
+                        <button class="slider-arrow prev" onclick="slidePrevious()"><i
+                                class="ph ph-caret-left"></i></button>
+                        <div class="slider-dots" id="slider-dots"></div>
+                        <button class="slider-arrow next" onclick="slideNext()"><i
+                                class="ph ph-caret-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- T-Shirt Section -->
+                <section id="cat-tshirts" class="product-section">
+                    <div class="section-header">
+                        <h3><i class="ph ph-t-shirt"></i> T-Shirt Printing</h3>
+                        <span class="view-all">View All</span>
+                    </div>
+                    <div class="modern-grid">
+                        <button class="product-card" onclick="initiateOrder('t1', 'Sports T-Shirt', 350)">
+                            <div class="card-img">
+                                <img src="images/sports_tshirt.png" alt="Sports T-Shirt"
+                                    onerror="this.src='https://placehold.co/400x400/e2e8f0/1e293b?text=T-Shirt'">
+                                <div class="badge">₹350</div>
+                                <div class="fav-icon" onclick="event.stopPropagation(); toggleWishlist('t1', this)"><i
+                                        class="ph ph-heart"></i></div>
+                            </div>
+                            <div class="card-info">
+                                <h5>Sports T-Shirt</h5>
+                                <p>Breathable dry-fit fabric</p>
+                                <div class="rating"><i class="ph-fill ph-star"></i> 4.8</div>
+                            </div>
+                        </button>
+                        <button class="product-card" onclick="initiateOrder('t2', 'Staff T-Shirt', 300)">
+                            <div class="card-img">
+                                <div class="icon-placeholder"><i class="ph ph-users"></i></div>
+                                <div class="badge">₹300</div>
+                                <div class="fav-icon" onclick="event.stopPropagation(); toggleWishlist('t2', this)"><i
+                                        class="ph ph-heart"></i></div>
+                            </div>
+                            <div class="card-info">
+                                <h5>Staff T-Shirt</h5>
+                                <p>Professional uniforms</p>
+                                <div class="rating"><i class="ph-fill ph-star"></i> 4.5</div>
+                            </div>
+                        </button>
+                        <button class="product-card" onclick="initiateOrder('t3', 'School Uniform', 250)">
+                            <div class="card-img">
+                                <div class="icon-placeholder"><i class="ph ph-student"></i></div>
+                                <div class="badge">₹250</div>
+                                <div class="fav-icon" onclick="event.stopPropagation(); toggleWishlist('t3', this)"><i
+                                        class="ph ph-heart"></i></div>
+                            </div>
+                            <div class="card-info">
+                                <h5>School Uniform</h5>
+                                <p>Durable cotton blend</p>
+                                <div class="rating"><i class="ph-fill ph-star"></i> 4.7</div>
+                            </div>
+                        </button>
+                        <button class="product-card" onclick="initiateOrder('t4', 'Custom Print', 400)">
+                            <div class="card-img">
+                                <div class="icon-placeholder"><i class="ph ph-paint-brush"></i></div>
+                                <div class="badge">₹400</div>
+                                <div class="fav-icon"><i class="ph ph-heart"></i></div>
+                            </div>
+                            <div class="card-info">
+                                <h5>Custom Printed</h5>
+                                <p>Your design here</p>
+                                <div class="rating"><i class="ph-fill ph-star"></i> 4.9</div>
+                            </div>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Corporate Section -->
+                <section id="cat-corporate" class="product-section">
+                    <div class="section-header">
+                        <h3><i class="ph ph-briefcase"></i> Corporate Gifts</h3>
+                        <span class="view-all">View All</span>
+                    </div>
+                    <div class="modern-grid">
+                        <button class="product-card" onclick="initiateOrder('c1', 'Mug', 200)">
+                            <div class="card-img">
+                                <div class="icon-placeholder"><i class="ph ph-coffee"></i></div>
+                                <div class="badge">₹200</div>
+                                <div class="fav-icon"><i class="ph ph-heart"></i></div>
+                            </div>
+                            <div class="card-info">
+                                <h5>Mug</h5>
+                                <p>Ceramic Branding</p>
+                                <div class="rating"><i class="ph-fill ph-star"></i> 4.8</div>
+                            </div>
+                        </button>
+                        <button class="product-card" onclick="initiateOrder('c2', 'Diary', 400)">
+                            <div class="card-img">
+                                <div class="icon-placeholder"><i class="ph ph-book"></i></div>
+                                <div class="badge">₹400</div>
+                                <div class="fav-icon"><i class="ph ph-heart"></i></div>
+                            </div>
+                            <div class="card-info">
+                                <h5>Diary</h5>
+                                <p>Leather Finish</p>
+                                <div class="rating"><i class="ph-fill ph-star"></i> 4.9</div>
+                            </div>
+                        </button>
+                        <button class="product-card" onclick="initiateOrder('c3', 'Pen', 120)">
+                            <div class="card-img">
+                                <div class="icon-placeholder"><i class="ph ph-pen"></i></div>
+                                <div class="badge">₹120</div>
+                                <div class="fav-icon"><i class="ph ph-heart"></i></div>
+                            </div>
+                            <div class="card-info">
+                                <h5>Metal Pen</h5>
+                                <p>Engraved Logo</p>
+                                <div class="rating"><i class="ph-fill ph-star"></i> 4.6</div>
+                            </div>
+                        </button>
+                        <button class="product-card" onclick="initiateOrder('c7', 'ID Card', 150)">
+                            <div class="card-img">
+                                <div class="icon-placeholder"><i class="ph ph-identification-card"></i></div>
+                                <div class="badge">₹150</div>
+                                <div class="fav-icon"><i class="ph ph-heart"></i></div>
+                            </div>
+                            <div class="card-info">
+                                <h5>ID Card</h5>
+                                <p>With Lanyard</p>
+                                <div class="rating"><i class="ph-fill ph-star"></i> 4.7</div>
+                            </div>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Personalized Section -->
+                <section id="cat-personalized" class="product-section">
+                    <div class="section-header">
+                        <h3><i class="ph ph-gift"></i> Personalized</h3>
+                        <span class="view-all">View All</span>
+                    </div>
+                    <div class="modern-grid">
+                        <button class="product-card" onclick="initiateOrder('p1', 'Photo Frame', 499)">
+                            <div class="card-img">
+                                <div class="icon-placeholder"><i class="ph ph-image"></i></div>
+                                <div class="badge">₹499</div>
+                                <!-- Badge/Heart logic consistent -->
+                                <div class="fav-icon"><i class="ph ph-heart"></i></div>
+                            </div>
+                            <div class="card-info">
+                                <h5>Photo Frame</h5>
+                                <p>Memories preserved</p>
+                                <div class="rating"><i class="ph-fill ph-star"></i> 4.8</div>
+                            </div>
+                        </button>
+                        <button class="product-card" onclick="initiateOrder('p4', 'Custom Gift', 800)">
+                            <div class="card-img">
+                                <div class="icon-placeholder"><i class="ph ph-gift"></i></div>
+                                <div class="badge">₹800</div>
+                                <div class="fav-icon"><i class="ph ph-heart"></i></div>
+                            </div>
+                            <div class="card-info">
+                                <h5>Gift Hamper</h5>
+                                <p>Unique Box</p>
+                                <div class="rating"><i class="ph-fill ph-star"></i> 5.0</div>
+                            </div>
+                        </button>
+                    </div>
+                </section>
+
+                <footer class="footer">
+                    <div style="margin-bottom: 8px; font-weight: 500; font-size: 0.9rem; opacity: 0.8;"
+                        data-i18n="footer_tagline">
+                        Unique and Simple Page for Better Customer Understanding
+                    </div>
+                    <div class="footer-links">
+                        <a href="https://wa.me/9314421119" target="_blank"><i class="ph ph-whatsapp-logo"></i> Help</a>
+                        <a href="#" onclick="openModal('pdf-catalog-modal')"><i class="ph ph-file-pdf"></i> Catalog</a>
+                    </div>
+                    <p class="copyright">© 2026 Creative Printers</p>
+                    <p class="powered-by"><span class="powered-text">Website Powered By</span> <span
+                            class="powered-name">Faiz Khan</span></p>
+                </footer>
+            </div>
+        </main>
+    </div>
+    <!-- Fixed QR -->
+    <div class="qr-fixed">
+        <div class="qr-code"><i class="ph ph-qr-code" style="font-size:80px; color:#1e1b4b"></i></div>
+        <span class="qr-text" style="font-size:0.75rem;">View on Mobile</span>
+    </div>
+
+    <!-- My Orders Modal -->
+    <div class="modal-overlay" id="my-orders-modal">
+        <div class="bottom-sheet">
+            <div class="modal-header">
+                <h3 class="modal-title">My Orders</h3>
+                <button class="close-modal" onclick="closeModal('my-orders-modal')"><i class="ph ph-x"></i></button>
+            </div>
+            <div id="orders-container" class="orders-list">
+                <p style="text-align: center; color: var(--text-muted);">Loading orders...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Details Modal with Mockup Editor -->
+    <div class="modal-overlay" id="order-details-modal">
+        <div class="bottom-sheet" style="max-width: 900px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h3 class="modal-title">Order Details</h3>
+                <button class="close-modal" onclick="closeModal('order-details-modal')"><i class="ph ph-x"></i></button>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                <!-- Left: Mockup Editor -->
+                <div id="mockup-editor-section" style="display: none;">
+                    <h4 style="margin-bottom: 12px;">Design Mockup</h4>
+
+                    <!-- Canvas Container -->
+                    <div
+                        style="position: relative; background: #f1f5f9; border-radius: 12px; overflow: hidden; aspect-ratio: 1;">
+                        <canvas id="mockup-canvas" width="500" height="500"
+                            style="width: 100%; height: 100%; cursor: move;"></canvas>
+                    </div>
+
+                    <!-- Mockup Controls -->
+                    <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 12px;">
+                        <div style="display: flex; gap: 8px;">
+                            <button class="small-buy-btn" id="toggle-view-btn" onclick="toggleMockupView()">
+                                <i class="ph ph-arrow-counter-clockwise"></i> Toggle Front/Back
+                            </button>
+                            <button class="small-buy-btn" onclick="resetMockup()">
+                                <i class="ph ph-arrows-clockwise"></i> Reset
+                            </button>
+                        </div>
+
+                        <div>
+                            <label style="display: block; margin-bottom: 6px; font-weight: 600;">T-Shirt Color:</label>
+                            <input type="color" id="tshirt-color-picker" value="#FFFFFF"
+                                onchange="changeTshirtColor(this.value)"
+                                style="width: 100%; height: 40px; border: 2px solid var(--card-border); border-radius: 8px; cursor: pointer;">
+                        </div>
+
+                        <div>
+                            <label style="display: block; margin-bottom: 6px; font-weight: 600;">Design Size:</label>
+                            <input type="range" id="design-size-slider" min="50" max="300" value="150"
+                                oninput="resizeDesign(this.value)" style="width: 100%;">
+                        </div>
+
+                        <button class="btn-premium buy-btn" onclick="saveMockup()">
+                            <i class="ph ph-check"></i> Done with Mockup
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right: Order Form -->
+                <div>
+                    <div class="form-group">
+                        <label>Product</label>
+                        <input type="text" id="order-product-name" readonly style="background: var(--bg-page);">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="order-phone" placeholder="+91 XXXXX XXXXX" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Size</span>
+                            <a href="#" onclick="event.preventDefault(); openSizeChart();"
+                                style="color: var(--primary); font-size: 0.85rem; text-decoration: none;">
+                                <i class="ph ph-ruler"></i> Size Guide
+                            </a>
+                        </label>
+                        <select id="order-size">
+                            <option value="S">Small</option>
+                            <option value="M" selected>Medium</option>
+                            <option value="L">Large</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Color Preference</label>
+                        <select id="order-color">
+                            <option value="White">White</option>
+                            <option value="Black">Black</option>
+                            <option value="Red">Red</option>
+                            <option value="Blue">Blue</option>
+                            <option value="Green">Green</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Print Quality</label>
+                        <select id="order-quality">
+                            <option value="Standard">Standard</option>
+                            <option value="Premium">Premium</option>
+                            <option value="HD">HD Quality</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Print Type</label>
+                        <select id="order-print-type">
+                            <option value="Digital">Digital Print</option>
+                            <option value="Screen">Screen Print</option>
+                            <option value="Vinyl">Vinyl</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Upload Design (PNG/JPG)</label>
+                        <input type="file" id="order-design-file" accept="image/png, image/jpeg"
+                            onchange="handleDesignUpload(this)">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Quantity</label>
+                        <input type="number" id="order-qty" value="1" min="1" oninput="updateTotal()">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Delivery Address</label>
+                        <textarea id="order-address" rows="3" placeholder="Enter full address..."></textarea>
+                    </div>
+
+                    <div class="form-group" style="background: var(--bg-page); padding: 16px; border-radius: 12px;">
+                        <div
+                            style="display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 700;">
+                            <span>Total:</span>
+                            <span id="total-price" style="color: var(--primary);">₹0</span>
+                        </div>
+                    </div>
+
+                    <button class="btn-premium buy-btn" onclick="goToPayment()">
+                        <span class="btn-blob"></span>
+                        <span class="btn-text">Proceed to Payment</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal-overlay" id="wishlist-modal">
+        <div class="bottom-sheet">
+            <div class="modal-header">
+                <h3 class="modal-title">My Wishlist</h3>
+                <button class="close-modal" onclick="closeModal('wishlist-modal')"><i class="ph ph-x"></i></button>
+            </div>
+            <div id="wishlist-container" class="wishlist-grid">
+                <p style="text-align: center; color: var(--text-muted);">Your wishlist is empty</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+
+    <div class="modal-overlay" id="pdf-catalog-modal">
+        <div class="bottom-sheet">
+            <div class="modal-header">
+                <h3 class="modal-title" data-i18n="browse_catalogs">Browse Catalogs</h3>
+                <button class="close-modal" onclick="closeModal('pdf-catalog-modal')"><i class="ph ph-x"></i></button>
+            </div>
+            <div class="pdf-list catalog-grid">
+                <div class="catalog-item">
+                    <i class="ph ph-gift"></i>
+                    <h4>Gift Items</h4>
+                    <a href="#" class="catalog-download"><i class="ph ph-file-pdf"></i> Download</a>
+                </div>
+                <div class="catalog-item">
+                    <i class="ph ph-t-shirt"></i>
+                    <h4>T-shirt & Mug</h4>
+                    <a href="#" class="catalog-download"><i class="ph ph-file-pdf"></i> Download</a>
+                </div>
+                <div class="catalog-item">
+                    <i class="ph ph-pen"></i>
+                    <h4>Pen</h4>
+                    <a href="#" class="catalog-download"><i class="ph ph-file-pdf"></i> Download</a>
+                </div>
+                <div class="catalog-item">
+                    <i class="ph ph-football"></i>
+                    <h4>Jersey Catalogue</h4>
+                    <a href="#" class="catalog-download"><i class="ph ph-file-pdf"></i> Download</a>
+                </div>
+                <div class="catalog-item">
+                    <i class="ph ph-paint-roller"></i>
+                    <h4>Sublimation T-shirt</h4>
+                    <a href="#" class="catalog-download"><i class="ph ph-file-pdf"></i> Download</a>
+                </div>
+                <div class="catalog-item">
+                    <i class="ph ph-hoodie"></i>
+                    <h4>Hoodies</h4>
+                    <a href="#" class="catalog-download"><i class="ph ph-file-pdf"></i> Download</a>
+                </div>
+                <div class="catalog-item">
+                    <i class="ph ph-book"></i>
+                    <h4>Diary</h4>
+                    <a href="#" class="catalog-download"><i class="ph ph-file-pdf"></i> Download</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="settings-modal">
+        <div class="bottom-sheet">
+            <div class="modal-header">
+                <h3 class="modal-title" data-i18n="settings">Settings</h3>
+                <button class="close-modal" onclick="closeModal('settings-modal')"><i class="ph ph-x"></i></button>
+            </div>
+            <div class="setting-row">
+                <span><i class="ph ph-globe"></i> <span data-i18n="language">Language</span></span>
+                <select id="lang-select" onchange="changeLanguage(this.value)" style="padding: 6px; font-size:0.9rem;">
+                    <option value="en">English</option>
+                    <option value="hi">Hindi</option>
+                    <option value="zh">Chinese</option>
+                    <option value="ta">Tamil</option>
+                    <option value="te">Telugu</option>
+                    <option value="mr">Marathi</option>
+                    <option value="bn">Bengali</option>
+                    <option value="gu">Gujarati</option>
+                    <option value="kn">Kannada</option>
+                    <option value="pa">Punjabi</option>
+                </select>
+            </div>
+            <div class="setting-row">
+                <span><i class="ph ph-moon"></i> <span>Dark Mode</span></span>
+                <label class="switch"><input type="checkbox" id="set-theme"><span class="slider"></span></label>
+            </div>
+            <div class="setting-row">
+                <span><i class="ph ph-film-strip"></i> <span>Animations</span></span>
+                <label class="switch"><input type="checkbox" id="set-anim" checked><span class="slider"></span></label>
+            </div>
+            <div class="setting-row">
+                <span><i class="ph ph-text-aa"></i> <span>Font Size</span></span>
+                <div class="font-controls">
+                    <button class="font-btn" onclick="adjustFont(-1)">A-</button>
+                    <button class="font-btn" onclick="adjustFont(1)">A+</button>
+                </div>
+            </div>
+            <div class="setting-row">
+                <span><i class="ph ph-eye"></i> <span>High Contrast</span></span>
+                <label class="switch"><input type="checkbox" id="set-contrast"><span class="slider"></span></label>
+            </div>
+            <div class="setting-row">
+                <span><i class="ph ph-download-simple"></i> <span>Download Catalog</span></span>
+                <a href="#" class="small-buy-btn" style="text-decoration:none;">PDF</a>
+            </div>
+            <div class="setting-row">
+                <span><i class="ph ph-speaker-high"></i> <span>Sounds</span></span>
+                <label class="switch"><input type="checkbox" id="set-sound"><span class="slider"></span></label>
+            </div>
+            <div class="setting-row">
+                <span><i class="ph ph-user"></i> <span>Account</span></span>
+                <button class="small-buy-btn" onclick="handleLoginClick()" id="setting-login-btn">Login</button>
+            </div>
+            <div class="setting-row">
+                <span><i class="ph ph-question"></i> <span>Help Center</span></span>
+                <a href="https://wa.me/9314421119" target="_blank"
+                    style="color:var(--primary); text-decoration:none; font-weight:600;">Chat</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal (UPDATED For Phone Auth) -->
+    <div class="modal-overlay" id="login-modal">
+        <div class="bottom-sheet center-popup">
+            <div class="modal-header">
+                <h3 class="modal-title" id="login-title" data-i18n="login">Login</h3>
+                <button class="close-modal" onclick="closeModal('login-modal')"><i class="ph ph-x"></i></button>
+            </div>
+
+            <!-- Step 1: Phone -->
+            <div id="login-step-1">
+                <div class="form-group">
+                    <label data-i18n="mobile">Mobile Number</label>
+                    <input type="tel" id="login-mobile" placeholder="+91 XXXXX XXXXX" value="+91">
+                </div>
+                <div id="recaptcha-container" style="margin-top: 10px;"></div>
+                <button class="btn-premium buy-btn" id="send-otp-btn" onclick="sendOTP()">
+                    <span class="btn-blob"></span>
+                    <span class="btn-text">Send OTP</span>
+                </button>
+                <div style="margin-top: 15px; text-align: center;"><button class="small-buy-btn admin-login-toggle"
+                        id="admin-toggle-btn" onclick="toggleAdminLogin()">Admin Login (Email)</button>
+
+                    <div style="margin-top: 10px; border-top: 1px solid var(--border-light); padding-top: 10px;">
+                        <button class="btn-premium google-signin-btn" id="google-signin-btn" type="button">
+                            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20"
+                                alt="Google">
+                            <span>Sign in with Google</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: OTP -->
+            <div id="login-step-2" style="display: none;">
+                <div class="form-group">
+                    <label>Enter OTP Code</label>
+                    <input type="text" id="login-otp" placeholder="123456" maxlength="6"
+                        style="letter-spacing: 5px; text-align: center; font-size: 1.2rem;">
+                </div>
+                <button class="btn-premium buy-btn" onclick="verifyOTP()">
+                    <span class="btn-blob"></span>
+                    <span class="btn-text">Verify & Login</span>
+                </button>
+                <div style="margin-top: 15px; text-align: center;">
+                    <a href="#" onclick="resetLogin()" style="color:var(--primary); font-size: 0.9rem;">Change
+                        Number</a>
+                </div>
+            </div>
+
+            <!-- Admin Email Login (Hidden) -->
+            <div id="login-step-admin" style="display: none;">
+                <div class="form-group">
+                    <label>Admin Email</label>
+                    <input type="email" id="admin-email" placeholder="admin@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="admin-pass" placeholder="Password">
+                </div>
+                <button class="btn-premium buy-btn admin-login-btn" id="admin-login-submit" onclick="adminLogin()">
+                    <span class="btn-blob"></span>
+                    <span class="btn-text">Admin Login</span>
+                </button>
+                <div style="margin-top: 15px; text-align: center;">
+                    <button class="small-buy-btn" onclick="toggleAdminLogin()"
+                        style="background:transparent; color:var(--text-muted); border:none;">Back to Phone
+                        Login</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="service-selection-modal">
+        <div class="bottom-sheet">
+            <div class="modal-header">
+                <h3 class="modal-title" id="service-cat-title">Select Service</h3>
+                <button class="close-modal" onclick="closeModal('service-selection-modal')"><i
+                        class="ph ph-x"></i></button>
+            </div>
+            <div id="service-list" class="service-list-container"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="order-details-modal">
+        <div class="bottom-sheet">
+            <div class="modal-header">
+                <h3 class="modal-title" data-i18n="order_details">Order Details</h3>
+                <button class="close-modal" onclick="closeModal('order-details-modal')"><i class="ph ph-x"></i></button>
+            </div>
+            <div class="form-group">
+                <label data-i18n="product_type">Product Type</label>
+                <input type="text" id="order-product-type" readonly style="background: var(--bg-page);">
+            </div>
+            <div class="form-group">
+                <label data-i18n="mobile">Mobile Number (Required)</label>
+                <input type="tel" id="order-phone" placeholder="10 digit number" pattern="[0-9]{10}" maxlength="10"
+                    style="letter-spacing: 1px;" oninput="validatePhone(this)">
+                <span class="error-message" id="phone-error"
+                    style="color: #ef4444; font-size: 0.8rem; display: none;">Please enter exactly 10 digits</span>
+            </div>
+            <div class="form-group">
+                <label data-i18n="quality_field">Company & Quality (Required)</label>
+                <input type="text" id="order-quality" placeholder="e.g. Puma, Premium Cotton">
+            </div>
+            <div class="form-row">
+                <div class="form-group half">
+                    <label data-i18n="print_type">Print Type</label>
+                    <select id="order-print-type">
+                        <option>Standard</option>
+                        <option>Premium</option>
+                    </select>
+                </div>
+                <div class="form-group half">
+                    <label data-i18n="qty">Quantity</label>
+                    <input type="number" id="order-qty" value="1" min="1">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group half">
+                    <label data-i18n="size">Size</label>
+                    <select id="order-size">
+                        <option>S</option>
+                        <option>M</option>
+                        <option>L</option>
+                        <option>XL</option>
+                    </select>
+                </div>
+                <div class="form-group half">
+                    <label data-i18n="color">Color</label>
+                    <div class="color-picker-wrapper">
+                        <input type="color" id="order-color-picker" value="#000000"
+                            onchange="updateColorDisplay(this.value)">
+                        <input type="text" id="order-color" placeholder="e.g. Black" readonly
+                            onclick="document.getElementById('order-color-picker').click()" style="cursor: pointer;">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label data-i18n="address">Delivery Address</label>
+                <textarea id="order-address" rows="2" placeholder="Full address..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Upload Design (Optional)</label>
+                <input type="file" id="design-file" accept=".jpg,.jpeg,.png,.pdf,.cdr,.svg"
+                    style="padding: 8px; cursor: pointer;">
+                <small style="color: var(--text-muted); font-size: 0.8rem;">Supported: JPG, PNG, PDF, CDR, SVG</small>
+            </div>
+            <div class="price-summary">
+                <span data-i18n="total">Total:</span>
+                <span id="total-price">₹0</span>
+            </div>
+            <button class="btn-premium buy-btn" onclick="goToPayment()">
+                <span class="btn-blob"></span>
+                <span class="btn-text" data-i18n="complete_order">Complete Order & Pay</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="payment-modal">
+        <div class="bottom-sheet center-popup">
+            <div class="modal-header">
+                <h3 class="modal-title" data-i18n="payment">Payment Gateway</h3>
+                <button class="close-modal" onclick="closeModal('payment-modal')"><i class="ph ph-x"></i></button>
+            </div>
+
+            <div class="payment-card-mock">
+                <div class="card-chip"><i class="ph ph-sim-card" style="font-size: 32px;"></i></div>
+                <div class="card-number">**** **** **** 1234</div>
+                <div class="card-holder">Demo Account</div>
+                <div class="card-loader">Demo Beta Processing...</div>
+            </div>
+
+            <div class="payment-actions">
+                <button class="btn-premium buy-btn payment-btn" onclick="confirmPayment('Online')">
+                    <span class="btn-blob"></span>
+                    <span class="btn-text" data-i18n="pay_now"><i class="ph ph-credit-card"></i> Pay Now (Demo)</span>
+                </button>
+                <button class="btn-premium buy-btn btn-whatsapp payment-btn" onclick="confirmWhatsAppOrder()">
+                    <span class="btn-blob"></span>
+                    <span class="btn-text">
+                        <i class="ph ph-whatsapp-logo" style="font-size: 1.2rem;"></i> WhatsApp Order
+                    </span>
+                </button>
+                <button class="btn-secondary payment-btn-later" onclick="confirmPayment('COD')">
+                    <i class="ph ph-clock"></i> Order Without Payment (Pay Later)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="success-modal">
+        <div class="bottom-sheet center-popup success-box">
+            <div class="check-anim">
+                <i class="ph ph-check-circle" style="font-size: 64px; color: #22c55e;"></i>
+            </div>
+            <h3 data-i18n="order_success">Order Successful!</h3>
+            <p data-i18n="thank_you">Thank you for your order.</p>
+            <div
+                style="margin-top: 16px; padding: 12px; background: var(--bg-page); border-radius: 12px; text-align: center;">
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 4px;">Order ID</p>
+                <p id="order-id-display" style="font-size: 1.2rem; font-weight: 700; color: var(--primary);"></p>
+            </div>
+            <button class="btn-premium buy-btn" onclick="closeModal('success-modal')">
+                <span class="btn-blob"></span>
+                <span class="btn-text" data-i18n="continue_shopping">Continue Shopping</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Configuration -->
+    <script src="firebase-config.js"></script>
+    <!-- Logic -->
+    <script src="script.js?v=2"></script>
+    <script src="features.js"></script>
+    <script src="enhanced-features.js"></script>
+    <script src="slider.js"></script>
+</body>
+
+</html>
